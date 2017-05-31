@@ -20,7 +20,7 @@
     android:background="@drawable/ui_address_bar_item_background"
     android:orientation="horizontal">
 
-    <com.layer.ui.Avatar
+    <com.layer.ui.avatar.Avatar
         android:id="@+id/avatar"
         android:layout_width="@dimen/atlas_avatar_item_single"
         android:layout_height="@dimen/atlas_avatar_item_single"

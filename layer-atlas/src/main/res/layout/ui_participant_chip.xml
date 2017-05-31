@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.layer.ui.Avatar
+    <com.layer.ui.avatar.Avatar
         android:id="@+id/avatar"
         android:layout_width="@dimen/atlas_chip_height"
         android:layout_height="@dimen/atlas_chip_height"/>

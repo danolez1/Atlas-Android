@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.Space;
 import android.widget.TextView;
 
-import com.layer.ui.Avatar;
+import com.layer.ui.avatar.Avatar;
 import com.layer.ui.R;
 import com.layer.ui.messagetypes.CellFactory;
 import com.layer.ui.messagetypes.MessageStyle;

@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.layer.ui.avatar.Avatar;
 import com.layer.ui.util.AvatarStyle;
 import com.layer.ui.util.EditTextUtil;
 import com.layer.ui.util.IdentityDisplayNameComparator;

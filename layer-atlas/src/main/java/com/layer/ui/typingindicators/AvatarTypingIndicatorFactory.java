@@ -11,7 +11,7 @@ import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.layer.ui.Avatar;
+import com.layer.ui.avatar.Avatar;
 import com.layer.ui.TypingIndicatorLayout;
 import com.layer.ui.R;
 import com.layer.sdk.listeners.LayerTypingIndicatorListener;
