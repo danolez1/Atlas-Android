@@ -91,10 +91,9 @@ public class Avatar extends View implements AvatarContract.View {
         super(context, attrs, defStyleAttr);
     }
 
-    public Avatar init(Picasso picasso) {
+    public Avatar init() {
         //TODO : Change this to an interface
         setUpAvatarViewModel();
-        mViewModelContract.setImageCachingLibrary(picasso);
         mPaintInitials.setAntiAlias(true);
         mPaintInitials.setSubpixelText(true);
         mPaintBorder.setAntiAlias(true);

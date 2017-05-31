@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.layer.ui.avatar.Avatar;
 import com.layer.ui.R;
+import com.layer.ui.avatar.Injection;
 import com.layer.ui.messagetypes.CellFactory;
 import com.layer.ui.messagetypes.MessageStyle;
 import com.layer.ui.util.IdentityRecyclerViewEventListener;
@@ -733,7 +734,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
 
             mAvatar = ((Avatar) itemView.findViewById(R.id.avatar));
             if (mAvatar != null)  {
-                mAvatar.init(picasso);
+                mAvatar.init();
                 mAvatar.setShouldShowPresence(shouldShowAvatarPresence);
             }
         }

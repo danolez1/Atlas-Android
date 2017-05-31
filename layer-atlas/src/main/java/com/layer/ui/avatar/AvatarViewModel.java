@@ -4,8 +4,8 @@ import android.text.TextUtils;
 
 import com.layer.sdk.messaging.Identity;
 import com.layer.ui.util.Util;
+import com.layer.ui.util.picasso.ImageCaching;
 import com.layer.ui.util.picasso.transformations.CircleTransform;
-import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
@@ -28,14 +28,15 @@ public class AvatarViewModel implements AvatarContract.ViewModel  {
     private final List<Avatar.ImageTarget> mPendingLoads = new ArrayList<Avatar.ImageTarget>();
 
 
-    //TODO : pass View in this the class
+    //TODO : make View weak reference
     private AvatarContract.View mView;
 
     // TODO: make these styleable
     private static final int MAX_AVATARS = 3;
-    private Picasso mPicasso;
+    private ImageCaching mImageCaching;
 
-    public AvatarViewModel() {
+    public AvatarViewModel(ImageCaching imageCaching) {
+        mImageCaching = imageCaching;
     }
 
     @Override
@@ -72,7 +73,7 @@ public class AvatarViewModel implements AvatarContract.ViewModel  {
             mInitials.remove(removed);
             Avatar.ImageTarget target = mImageTargets.remove(removed);
             if (target != null) {
-                mPicasso.cancelRequest(target);
+                mImageCaching.cancelRequest(target);
                 recyclableTargets.add(target);
             }
         }
@@ -99,12 +100,12 @@ public class AvatarViewModel implements AvatarContract.ViewModel  {
             mInitials.put(existing, Util.getInitials(existing));
 
             Avatar.ImageTarget existingTarget = mImageTargets.get(existing);
-            mPicasso.cancelRequest(existingTarget);
+            mImageCaching.cancelRequest(existingTarget);
             toLoad.add(existingTarget);
         }
 
         for (Avatar.ImageTarget target : mPendingLoads) {
-            mPicasso.cancelRequest(target);
+            mImageCaching.cancelRequest(target);
         }
         mPendingLoads.clear();
         mPendingLoads.addAll(toLoad);
@@ -156,19 +157,7 @@ public class AvatarViewModel implements AvatarContract.ViewModel  {
     @Override
     public void loadImage(String targetUrl, String tag, Object placeHolder, Object fade, int size,
             int size1, CircleTransform multiTransform, Target imageTarget) {
-        //mPicasso.load(targetUrl,tag,null,null,size,size1,multiTransform,imageTarget);
-
-        mPicasso.load(targetUrl)
-                .tag(Avatar.TAG).noPlaceholder().noFade()
-                .centerCrop().resize(size, size)
-                .transform(multiTransform)
-                .into(imageTarget);
-    }
-
-    //TODO Delete this, injected in the Constructor
-    @Override
-    public void setImageCachingLibrary(Picasso picasso) {
-        mPicasso = picasso;
+        mImageCaching.load(targetUrl,tag,null,null,size,size1,multiTransform,imageTarget);
     }
 
     @Override

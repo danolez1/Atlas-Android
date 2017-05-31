@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.layer.ui.avatar.Avatar;
+import com.layer.ui.avatar.Injection;
 import com.layer.ui.util.AvatarStyle;
 import com.layer.ui.util.EditTextUtil;
 import com.layer.ui.util.IdentityDisplayNameComparator;
@@ -103,8 +104,7 @@ public class AddressBar extends LinearLayout {
 
     public AddressBar init(LayerClient layerClient, Picasso picasso) {
         mLayerClient = layerClient;
-        mPicasso = picasso;
-
+        Injection.setContextAndLayerClient(getContext(),layerClient);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mParticipantList.setLayoutManager(manager);
         mAvailableConversationAdapter = new AvailableConversationAdapter(mLayerClient, mPicasso);
@@ -456,7 +456,7 @@ public class AddressBar extends LinearLayout {
 
             // Initialize participant data
             mName.setText(Util.getDisplayName(participant));
-            mAvatar.init(picasso)
+            mAvatar.init()
                     .setStyle(mAvatarStyle)
                     .setParticipants(participant);
 
@@ -610,7 +610,7 @@ public class AddressBar extends LinearLayout {
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             ViewHolder viewHolder = new ViewHolder(parent);
             viewHolder.mAvatar
-                    .init(mPicasso)
+                    .init()
                     .setStyle(mAvatarStyle);
             return viewHolder;
         }

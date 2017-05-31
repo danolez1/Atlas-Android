@@ -115,7 +115,7 @@ public class AvatarTypingIndicatorFactory implements TypingIndicatorLayout.Typin
             Avatar avatar = tag.mPassives.poll();
             if (avatar == null) {
                 // TODO: allow styling
-                avatar = new Avatar(l.getContext()).init(mPicasso);
+                avatar = new Avatar(l.getContext()).init();
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(avatarDim, avatarDim);
                 params.setMargins(0, 0, avatarSpace, 0);
                 avatar.setLayoutParams(params);

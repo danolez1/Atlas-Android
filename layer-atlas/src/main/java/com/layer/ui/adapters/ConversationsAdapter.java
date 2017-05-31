@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.layer.ui.avatar.Avatar;
 import com.layer.ui.R;
+import com.layer.ui.avatar.Injection;
 import com.layer.ui.messagetypes.CellFactory;
 import com.layer.ui.messagetypes.generic.GenericCellFactory;
 import com.layer.ui.messagetypes.location.LocationCellFactory;
@@ -185,8 +186,9 @@ public class ConversationsAdapter extends RecyclerView.Adapter<ConversationsAdap
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ViewHolder viewHolder = new ViewHolder(mInflater.inflate(ViewHolder.RESOURCE_ID, parent, false), conversationStyle);
         viewHolder.setClickListener(mViewHolderClickListener);
+        Injection.setContextAndLayerClient(viewHolder.mTitleView.getContext().getApplicationContext(), mLayerClient);
         viewHolder.mAvatarCluster
-                .init(mPicasso)
+                .init()
                 .setStyle(conversationStyle.getAvatarStyle());
         return viewHolder;
     }
