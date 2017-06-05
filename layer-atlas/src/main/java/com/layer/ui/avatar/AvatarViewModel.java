@@ -5,8 +5,6 @@ import android.text.TextUtils;
 import com.layer.sdk.messaging.Identity;
 import com.layer.ui.util.Util;
 import com.layer.ui.util.picasso.ImageCaching;
-import com.layer.ui.util.picasso.transformations.CircleTransform;
-import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,9 +21,9 @@ public class AvatarViewModel implements AvatarContract.ViewModel  {
 
     private Set<Identity> mParticipants = new LinkedHashSet<>();
     private final Map<Identity, String> mInitials = new HashMap<>();
-    private final Map<Identity, Avatar.ImageTarget> mImageTargets = new HashMap<>();
+    private final Map<Identity, UiImageTarget> mImageTargets = new HashMap<>();
     // Initials and Picasso image targets by user ID
-    private final List<Avatar.ImageTarget> mPendingLoads = new ArrayList<Avatar.ImageTarget>();
+    private final List<UiImageTarget> mPendingLoads = new ArrayList<>();
 
 
     //TODO : make View weak reference
@@ -66,12 +64,12 @@ public class AvatarViewModel implements AvatarContract.ViewModel  {
         }
 
         Diff diff = diff(mInitials.keySet(), mParticipants);
-        List<Avatar.ImageTarget> toLoad = new ArrayList<>();
+        List<UiImageTarget> toLoad = new ArrayList<>();
 
-        List<Avatar.ImageTarget> recyclableTargets = new ArrayList<Avatar.ImageTarget>();
+        List<UiImageTarget> recyclableTargets = new ArrayList<UiImageTarget>();
         for (Identity removed : diff.removed) {
             mInitials.remove(removed);
-            Avatar.ImageTarget target = mImageTargets.remove(removed);
+            UiImageTarget target = mImageTargets.remove(removed);
             if (target != null) {
                 mImageCaching.cancelRequest(target);
                 recyclableTargets.add(target);
@@ -82,9 +80,9 @@ public class AvatarViewModel implements AvatarContract.ViewModel  {
             if (added == null) return;
             mInitials.put(added, Util.getInitials(added));
 
-            final Avatar.ImageTarget target;
+            final UiImageTarget target;
             if (recyclableTargets.isEmpty()) {
-                target = new Avatar.ImageTarget(mView.getAvatar());
+                target = new UiImageTarget(mView.getAvatar());
             } else {
                 target = recyclableTargets.remove(0);
             }
@@ -99,12 +97,12 @@ public class AvatarViewModel implements AvatarContract.ViewModel  {
             if (existing == null) continue;
             mInitials.put(existing, Util.getInitials(existing));
 
-            Avatar.ImageTarget existingTarget = mImageTargets.get(existing);
+            UiImageTarget existingTarget = mImageTargets.get(existing);
             mImageCaching.cancelRequest(existingTarget);
             toLoad.add(existingTarget);
         }
 
-        for (Avatar.ImageTarget target : mPendingLoads) {
+        for (UiImageTarget target : mPendingLoads) {
             mImageCaching.cancelRequest(target);
         }
         mPendingLoads.clear();
@@ -145,7 +143,7 @@ public class AvatarViewModel implements AvatarContract.ViewModel  {
     }
 
     @Override
-    public Avatar.ImageTarget getImageTarget(Identity key) {
+    public UiImageTarget getImageTarget(Identity key) {
         return  mImageTargets.get(key);
     }
 
@@ -156,8 +154,8 @@ public class AvatarViewModel implements AvatarContract.ViewModel  {
 
     @Override
     public void loadImage(String targetUrl, String tag, Object placeHolder, Object fade, int size,
-            int size1, CircleTransform multiTransform, Target imageTarget) {
-        mImageCaching.load(targetUrl,tag,null,null,size,size1,multiTransform,imageTarget);
+            int size1, boolean flag, ImageCaching.ImageTarget imageTarget) {
+        mImageCaching.load(targetUrl,tag,null,null,size,size1,flag,imageTarget);
     }
 
     @Override

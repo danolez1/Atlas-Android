@@ -1,8 +1,7 @@
 package com.layer.ui.avatar;
 
 import com.layer.sdk.messaging.Identity;
-import com.layer.ui.util.picasso.transformations.CircleTransform;
-import com.squareup.picasso.Target;
+import com.layer.ui.util.picasso.ImageCaching;
 
 import java.util.List;
 import java.util.Map;
@@ -24,12 +23,13 @@ public interface AvatarContract {
 
         Set<Map.Entry<Identity, String>> getEntrySet();
 
-        Avatar.ImageTarget getImageTarget(Identity key);
+        UiImageTarget getImageTarget(Identity key);
 
         void setClusterSizes();
 
+        //TODO Change flag to Enum incase user has more than one transformation
         void loadImage(String targetUrl, String tag, Object placeHolder, Object fade, int size, int size1,
-                CircleTransform multiTransform, Target imageTarget);
+                boolean flag, ImageCaching.ImageTarget imageTarget);
 
         void setView(AvatarContract.View avatar);
     }
@@ -38,9 +38,13 @@ public interface AvatarContract {
 
         Avatar getAvatar();
 
-        boolean setClusterSizes(Map<Identity, String> initials, List<Avatar.ImageTarget> pendingLoads);
+        boolean setClusterSizes(Map<Identity, String> initials, List<UiImageTarget> pendingLoads);
 
         void revalidateView();
+
+        Avatar setParticipants(Identity... participants);
+
+        Avatar setParticipants(Set<Identity> participants);
     }
 
 }

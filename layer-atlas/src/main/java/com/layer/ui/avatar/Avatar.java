@@ -7,23 +7,18 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.layer.ui.R;
 import com.layer.ui.util.AvatarStyle;
-import com.layer.ui.util.picasso.transformations.CircleTransform;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Presence;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * AtlasAvatar can be used to show information about one user, or as a cluster of multiple users.
@@ -32,9 +27,6 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class Avatar extends View implements AvatarContract.View {
     public static final String TAG = Avatar.class.getSimpleName();
-
-    private final static CircleTransform SINGLE_TRANSFORM = new CircleTransform(TAG + ".single");
-    private final static CircleTransform MULTI_TRANSFORM = new CircleTransform(TAG + ".multi");
 
     private static final Paint PAINT_TRANSPARENT = new Paint();
     private static final Paint PAINT_BITMAP = new Paint();
@@ -119,6 +111,7 @@ public class Avatar extends View implements AvatarContract.View {
         return this;
     }
 
+    @Override
     public Avatar setParticipants(Identity... participants) {
         mViewModelContract.setParticipants(participants);
         mViewModelContract.update();
@@ -153,6 +146,7 @@ public class Avatar extends View implements AvatarContract.View {
     /**
      * Should be called from UI thread.
      */
+    @Override
     public Avatar setParticipants(Set<Identity> participants) {
         mViewModelContract.setParticipants(participants);
         return this;
@@ -170,7 +164,7 @@ public class Avatar extends View implements AvatarContract.View {
     }
 
     @Override
-    public boolean setClusterSizes( Map<Identity, String> mInitials,List<ImageTarget> mPendingLoads ) {
+    public boolean setClusterSizes( Map<Identity, String> mInitials,List<UiImageTarget> mPendingLoads ) {
         int avatarCount = mInitials.size();
         if (avatarCount == 0) return false;
         ViewGroup.LayoutParams params = getLayoutParams();
@@ -203,8 +197,8 @@ public class Avatar extends View implements AvatarContract.View {
         synchronized (mPendingLoads) {
             if (!mPendingLoads.isEmpty()) {
                 int size = Math.round(hasBorder ? (mInnerRadius * 2f) : (mOuterRadius * 2f));
-                for (ImageTarget imageTarget : mPendingLoads) {
-                    String targetUrl = imageTarget.getUrl();
+                for (UiImageTarget uiImageTarget : mPendingLoads) {
+                    String targetUrl = uiImageTarget.getUrl();
                     // Handle empty paths just like null paths. This ensures empty paths will go
                     // through the normal Picasso flow and the bitmap is set.
                     if (targetUrl != null && targetUrl.trim().length() == 0) {
@@ -212,8 +206,8 @@ public class Avatar extends View implements AvatarContract.View {
                     }
                     //TODO: Turn into builder like partern
                     mViewModelContract.loadImage(targetUrl, Avatar.TAG,null,null,size,size,
-                            (avatarCount > 1) ? MULTI_TRANSFORM : SINGLE_TRANSFORM,
-                            imageTarget);
+                            (avatarCount > 1),
+                            uiImageTarget);
                 }
                 mPendingLoads.clear();
             }
@@ -245,8 +239,8 @@ public class Avatar extends View implements AvatarContract.View {
             if (hasBorder) canvas.drawCircle(cx, cy, mOuterRadius, mPaintBorder);
 
             // Initials or bitmap
-            ImageTarget imageTarget = mViewModelContract.getImageTarget(entry.getKey());
-            Bitmap bitmap = (imageTarget == null) ? null : imageTarget.getBitmap();
+            UiImageTarget uiImageTarget = mViewModelContract.getImageTarget(entry.getKey());
+            Bitmap bitmap = (uiImageTarget == null) ? null : uiImageTarget.getBitmap();
             if (bitmap == null) {
                 String initials = entry.getValue();
                 mPaintInitials.setTextSize(mTextSize);
@@ -319,62 +313,6 @@ public class Avatar extends View implements AvatarContract.View {
     @Override
     public Avatar getAvatar() {
         return this;
-    }
-
-    protected static class ImageTarget implements Target {
-        private final static AtomicLong sCounter = new AtomicLong(0);
-        private final long mId;
-        private final Avatar mCluster;
-        private String mUrl;
-        private Bitmap mBitmap;
-
-        public ImageTarget(Avatar cluster) {
-            mId = sCounter.incrementAndGet();
-            mCluster = cluster;
-        }
-
-        public ImageTarget setUrl(String url) {
-            mUrl = url;
-            return this;
-        }
-
-        public String getUrl() {
-            return mUrl;
-        }
-
-        @Override
-        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-            mCluster.invalidate();
-            mBitmap = bitmap;
-        }
-
-        @Override
-        public void onBitmapFailed(Drawable errorDrawable) {
-            mCluster.invalidate();
-            mBitmap = null;
-        }
-
-        @Override
-        public void onPrepareLoad(Drawable placeHolderDrawable) {
-            mBitmap = null;
-        }
-
-        public Bitmap getBitmap() {
-            return mBitmap;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            ImageTarget target = (ImageTarget) o;
-            return mId == target.mId;
-        }
-
-        @Override
-        public int hashCode() {
-            return (int) (mId ^ (mId >>> 32));
-        }
     }
 
 }

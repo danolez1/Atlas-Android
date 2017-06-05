@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.google.android.gms.tasks.RuntimeExecutionException;
 import com.layer.sdk.LayerClient;
+import com.layer.ui.util.ImageTransformImpl;
 import com.layer.ui.util.picasso.ImageCaching;
 import com.layer.ui.util.picasso.ImageCachingImpl;
 
@@ -22,7 +23,7 @@ public class Injection {
             if (sContext == null || sLayerClient == null) {
                 throw new RuntimeExecutionException(new Throwable("Context or Layer Client is not set"));
             }
-            sImageCaching = new ImageCachingImpl(sContext, sLayerClient);
+            sImageCaching = new ImageCachingImpl(sContext, sLayerClient, new ImageTransformImpl());
         }
         return sImageCaching;
     }
@@ -30,5 +31,9 @@ public class Injection {
     public static void setContextAndLayerClient(Context context, LayerClient layerClient) {
         sContext = context;
         sLayerClient = layerClient;
+    }
+
+    public static ImageCaching.ImageTransform provideImageTransform() {
+        return new ImageTransformImpl();
     }
 }
