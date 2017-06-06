@@ -11,12 +11,12 @@ import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.layer.sdk.LayerClient;
 import com.layer.ui.avatar.Avatar;
 import com.layer.ui.TypingIndicatorLayout;
 import com.layer.ui.R;
 import com.layer.sdk.listeners.LayerTypingIndicatorListener;
 import com.layer.sdk.messaging.Identity;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -33,10 +33,10 @@ public class AvatarTypingIndicatorFactory implements TypingIndicatorLayout.Typin
     private static final long ANIMATION_PERIOD = 600;
     private static final long ANIMATION_OFFSET = ANIMATION_PERIOD / 3;
 
-    private final Picasso mPicasso;
+    private final LayerClient mLayerClient;
 
-    public AvatarTypingIndicatorFactory(Picasso picasso) {
-        mPicasso = picasso;
+    public AvatarTypingIndicatorFactory(LayerClient layerClient) {
+        mLayerClient = layerClient;
     }
 
     @Override
@@ -115,7 +115,7 @@ public class AvatarTypingIndicatorFactory implements TypingIndicatorLayout.Typin
             Avatar avatar = tag.mPassives.poll();
             if (avatar == null) {
                 // TODO: allow styling
-                avatar = new Avatar(l.getContext()).init();
+                avatar = new Avatar(l.getContext()).init(l.getContext().getApplicationContext(), mLayerClient);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(avatarDim, avatarDim);
                 params.setMargins(0, 0, avatarSpace, 0);
                 avatar.setLayoutParams(params);

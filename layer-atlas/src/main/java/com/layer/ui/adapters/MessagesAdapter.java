@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.layer.ui.avatar.Avatar;
 import com.layer.ui.R;
-import com.layer.ui.avatar.Injection;
 import com.layer.ui.messagetypes.CellFactory;
 import com.layer.ui.messagetypes.MessageStyle;
 import com.layer.ui.util.IdentityRecyclerViewEventListener;
@@ -300,7 +299,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
 
         CellType cellType = mCellTypesByViewType.get(viewType);
         int rootResId = cellType.mMe ? CellViewHolder.RESOURCE_ID_ME : CellViewHolder.RESOURCE_ID_THEM;
-        CellViewHolder rootViewHolder = new CellViewHolder(mLayoutInflater.inflate(rootResId, parent, false), mPicasso, mShouldShowAvatarPresence);
+        CellViewHolder rootViewHolder = new CellViewHolder(mLayoutInflater.inflate(rootResId, parent, false), mPicasso, mLayerClient, mShouldShowAvatarPresence);
         rootViewHolder.mCellHolder = cellType.mCellFactory.createCellHolder(rootViewHolder.mCell, cellType.mMe, mLayoutInflater);
         rootViewHolder.mCellHolderSpecs = new CellFactory.CellHolderSpecs();
         return rootViewHolder;
@@ -722,7 +721,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         protected CellFactory.CellHolder mCellHolder;
         protected CellFactory.CellHolderSpecs mCellHolderSpecs;
 
-        public CellViewHolder(View itemView, Picasso picasso, boolean shouldShowAvatarPresence) {
+        public CellViewHolder(View itemView, Picasso picasso, LayerClient layerClient, boolean shouldShowAvatarPresence) {
             super(itemView);
             mUserName = (TextView) itemView.findViewById(R.id.sender);
             mTimeGroup = itemView.findViewById(R.id.time_group);
@@ -734,7 +733,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
 
             mAvatar = ((Avatar) itemView.findViewById(R.id.avatar));
             if (mAvatar != null)  {
-                mAvatar.init();
+                mAvatar.init(mUserName.getContext().getApplicationContext(), layerClient);
                 mAvatar.setShouldShowPresence(shouldShowAvatarPresence);
             }
         }

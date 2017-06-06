@@ -13,7 +13,7 @@ public class Injection {
     private static Context sContext;
     private static LayerClient sLayerClient;
 
-    public static AvatarContract.ViewModel injectAvatarViewModel() {
+    public static AvatarContract.ViewModel provideAvatarViewModel() {
         return sImageCacheWrapper != null ? new AvatarViewModel(sImageCacheWrapper)
                                      : new AvatarViewModel(provideImageCachingLibrary());
     }
