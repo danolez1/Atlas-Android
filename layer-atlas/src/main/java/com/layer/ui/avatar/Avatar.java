@@ -15,6 +15,7 @@ import com.layer.ui.R;
 import com.layer.ui.util.AvatarStyle;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Presence;
+import com.layer.ui.util.Util;
 
 import java.util.List;
 import java.util.Map;
@@ -263,6 +264,7 @@ public class Avatar extends View implements AvatarContract.View {
         }
     }
 
+
     private void drawPresence(Canvas canvas, Identity identity) {
         Presence.PresenceStatus currentStatus = identity.getPresenceStatus();
         if (currentStatus == null) {
@@ -308,6 +310,11 @@ public class Avatar extends View implements AvatarContract.View {
                 canvas.drawCircle(mPresenceCenterX, mPresenceCenterY, (mPresenceInnerRadius / 2f), mBackgroundPaint);
             }
         }
+    }
+
+    @Override
+    public String getInitials(Identity added) {
+        return Util.getInitials(added);
     }
 
     @Override

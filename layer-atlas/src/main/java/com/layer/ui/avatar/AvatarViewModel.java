@@ -4,7 +4,7 @@ import android.text.TextUtils;
 
 import com.layer.sdk.messaging.Identity;
 import com.layer.ui.util.Util;
-import com.layer.ui.util.picasso.ImageCaching;
+import com.layer.ui.util.picasso.ImageCacheWrapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,16 +25,14 @@ public class AvatarViewModel implements AvatarContract.ViewModel  {
     // Initials and Picasso image targets by user ID
     private final List<UiImageTarget> mPendingLoads = new ArrayList<>();
 
-
-    //TODO : make View weak reference
     private AvatarContract.View mView;
 
     // TODO: make these styleable
     private static final int MAX_AVATARS = 3;
-    private ImageCaching mImageCaching;
+    private ImageCacheWrapper mImageCacheWrapper;
 
-    public AvatarViewModel(ImageCaching imageCaching) {
-        mImageCaching = imageCaching;
+    public AvatarViewModel(ImageCacheWrapper imageCacheWrapper) {
+        mImageCacheWrapper = imageCacheWrapper;
     }
 
     @Override
@@ -71,14 +69,14 @@ public class AvatarViewModel implements AvatarContract.ViewModel  {
             mInitials.remove(removed);
             UiImageTarget target = mImageTargets.remove(removed);
             if (target != null) {
-                mImageCaching.cancelRequest(target);
+                mImageCacheWrapper.cancelRequest(target);
                 recyclableTargets.add(target);
             }
         }
 
         for (Identity added : diff.added) {
             if (added == null) return;
-            mInitials.put(added, Util.getInitials(added));
+            mInitials.put(added, mView.getInitials(added));
 
             final UiImageTarget target;
             if (recyclableTargets.isEmpty()) {
@@ -98,12 +96,12 @@ public class AvatarViewModel implements AvatarContract.ViewModel  {
             mInitials.put(existing, Util.getInitials(existing));
 
             UiImageTarget existingTarget = mImageTargets.get(existing);
-            mImageCaching.cancelRequest(existingTarget);
+            mImageCacheWrapper.cancelRequest(existingTarget);
             toLoad.add(existingTarget);
         }
 
         for (UiImageTarget target : mPendingLoads) {
-            mImageCaching.cancelRequest(target);
+            mImageCacheWrapper.cancelRequest(target);
         }
         mPendingLoads.clear();
         mPendingLoads.addAll(toLoad);
@@ -154,8 +152,8 @@ public class AvatarViewModel implements AvatarContract.ViewModel  {
 
     @Override
     public void loadImage(String targetUrl, String tag, Object placeHolder, Object fade, int size,
-            int size1, boolean flag, ImageCaching.ImageTarget imageTarget) {
-        mImageCaching.load(targetUrl,tag,null,null,size,size1,flag,imageTarget);
+            int size1, boolean flag, ImageCacheWrapper.ImageTarget imageTarget) {
+        mImageCacheWrapper.load(targetUrl,tag,null,null,size,size1,flag,imageTarget);
     }
 
     @Override

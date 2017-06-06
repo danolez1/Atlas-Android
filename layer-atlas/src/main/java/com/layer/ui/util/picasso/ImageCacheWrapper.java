@@ -7,7 +7,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.squareup.picasso.Transformation;
 
-public interface ImageCaching {
+public interface ImageCacheWrapper {
 
     void cancelRequest(Target target);
 

@@ -1,7 +1,7 @@
 package com.layer.ui.avatar;
 
 import com.layer.sdk.messaging.Identity;
-import com.layer.ui.util.picasso.ImageCaching;
+import com.layer.ui.util.picasso.ImageCacheWrapper;
 
 import java.util.List;
 import java.util.Map;
@@ -29,7 +29,7 @@ public interface AvatarContract {
 
         //TODO Change flag to Enum incase user has more than one transformation
         void loadImage(String targetUrl, String tag, Object placeHolder, Object fade, int size, int size1,
-                boolean flag, ImageCaching.ImageTarget imageTarget);
+                boolean flag, ImageCacheWrapper.ImageTarget imageTarget);
 
         void setView(AvatarContract.View avatar);
     }
@@ -45,6 +45,8 @@ public interface AvatarContract {
         Avatar setParticipants(Identity... participants);
 
         Avatar setParticipants(Set<Identity> participants);
+
+        String getInitials(Identity added);
     }
 
 }

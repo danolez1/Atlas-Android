@@ -8,15 +8,15 @@ import com.layer.ui.util.picasso.requesthandlers.MessagePartRequestHandler;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-public class ImageCachingImpl implements ImageCaching {
+public class ImageCacheWrapperImpl implements ImageCacheWrapper {
     private Picasso mPicasso;
     private Context mContext;
     private LayerClient mLayerClient;
-    private ImageCaching.ImageTransform mImageTransform;
+    private ImageCacheWrapper.ImageTransform mImageTransform;
 
 
 
-    public ImageCachingImpl(Context context, LayerClient layerClient, ImageTransform imageTransform) {
+    public ImageCacheWrapperImpl(Context context, LayerClient layerClient, ImageTransform imageTransform) {
         mContext = context;
         mLayerClient = layerClient;
         mImageTransform = imageTransform;

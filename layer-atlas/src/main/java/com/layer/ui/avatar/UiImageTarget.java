@@ -3,13 +3,13 @@ package com.layer.ui.avatar;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
-import com.layer.ui.util.picasso.ImageCaching;
+import com.layer.ui.util.picasso.ImageCacheWrapper;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-public class UiImageTarget implements Target, ImageCaching.ImageTarget {
+public class UiImageTarget implements Target, ImageCacheWrapper.ImageTarget {
     private final static AtomicLong sCounter = new AtomicLong(0);
     private final long mId;
     private final Avatar mCluster;

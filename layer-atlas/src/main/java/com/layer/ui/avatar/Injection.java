@@ -5,27 +5,27 @@ import android.content.Context;
 import com.google.android.gms.tasks.RuntimeExecutionException;
 import com.layer.sdk.LayerClient;
 import com.layer.ui.util.ImageTransformImpl;
-import com.layer.ui.util.picasso.ImageCaching;
-import com.layer.ui.util.picasso.ImageCachingImpl;
+import com.layer.ui.util.picasso.ImageCacheWrapper;
+import com.layer.ui.util.picasso.ImageCacheWrapperImpl;
 
 public class Injection {
-    private static ImageCaching sImageCaching;
+    private static ImageCacheWrapper sImageCacheWrapper;
     private static Context sContext;
     private static LayerClient sLayerClient;
 
     public static AvatarContract.ViewModel injectAvatarViewModel() {
-        return sImageCaching != null ? new AvatarViewModel(sImageCaching)
+        return sImageCacheWrapper != null ? new AvatarViewModel(sImageCacheWrapper)
                                      : new AvatarViewModel(provideImageCachingLibrary());
     }
 
-    public static ImageCaching provideImageCachingLibrary() {
-        if (sImageCaching == null) {
+    public static ImageCacheWrapper provideImageCachingLibrary() {
+        if (sImageCacheWrapper == null) {
             if (sContext == null || sLayerClient == null) {
                 throw new RuntimeExecutionException(new Throwable("Context or Layer Client is not set"));
             }
-            sImageCaching = new ImageCachingImpl(sContext, sLayerClient, new ImageTransformImpl());
+            sImageCacheWrapper = new ImageCacheWrapperImpl(sContext, sLayerClient, new ImageTransformImpl());
         }
-        return sImageCaching;
+        return sImageCacheWrapper;
     }
 
     public static void setContextAndLayerClient(Context context, LayerClient layerClient) {
@@ -33,7 +33,7 @@ public class Injection {
         sLayerClient = layerClient;
     }
 
-    public static ImageCaching.ImageTransform provideImageTransform() {
+    public static ImageCacheWrapper.ImageTransform provideImageTransform() {
         return new ImageTransformImpl();
     }
 }
