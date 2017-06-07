@@ -7,12 +7,12 @@
   * Displaying Timestamp for the first message in the list
   * Basic tests
   * Tests now run on CircleCI with every pull request
-
-## 0.4.8 -- ROLLED BACK due to bug. please update to 0.4.9
-
+  
 #### Bug Fixes
   * Fixed chat bubble empty on receiving long messages
   * Using fixed heights suitable for image previews to stop images from resizing on fragment/activity resize
+
+## 0.4.8 -- ROLLED BACK due to bug. please update to 0.4.9
 
 ## 0.4.7
 
