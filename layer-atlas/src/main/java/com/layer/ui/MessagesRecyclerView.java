@@ -35,7 +35,6 @@ import com.layer.sdk.messaging.Message;
 import com.layer.sdk.query.Predicate;
 import com.layer.sdk.query.Query;
 import com.layer.sdk.query.SortDescriptor;
-import com.squareup.picasso.Picasso;
 
 public class MessagesRecyclerView extends RecyclerView {
     private MessagesAdapter mAdapter;
@@ -58,13 +57,13 @@ public class MessagesRecyclerView extends RecyclerView {
         super(context);
     }
 
-    public MessagesRecyclerView init(LayerClient layerClient, Picasso picasso) {
+    public MessagesRecyclerView init(LayerClient layerClient) {
         mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mLayoutManager.setStackFromEnd(true);
         setLayoutManager(mLayoutManager);
 
         // Create an adapter that auto-scrolls if we're already at the bottom
-        mAdapter = new MessagesAdapter(getContext(), layerClient, picasso)
+        mAdapter = new MessagesAdapter(getContext(), layerClient)
                 .setRecyclerView(this)
                 .setOnMessageAppendListener(new MessagesAdapter.OnMessageAppendListener() {
                     @Override

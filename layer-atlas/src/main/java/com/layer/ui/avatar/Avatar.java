@@ -46,7 +46,7 @@ public class Avatar extends View implements AvatarContract.View {
     private static final float MULTI_FRACTION = 26f / 40f;
 
     //TODO: Inject this into View
-    private AvatarContract.ViewModel mViewModelContract;
+    private AvatarContract.ViewModel mAvatarViewModel;
 
     static {
         PAINT_TRANSPARENT.setARGB(0, 255, 255, 255);
@@ -87,7 +87,7 @@ public class Avatar extends View implements AvatarContract.View {
 
     public Avatar init(Context context, LayerClient layerClient) {
         Injection.setContextAndLayerClient(context,layerClient);
-        mViewModelContract = Injection.provideAvatarViewModel();
+        mAvatarViewModel = Injection.provideAvatarViewModel();
         setUpAvatarViewModel();
         mPaintInitials.setAntiAlias(true);
         mPaintInitials.setSubpixelText(true);
@@ -102,7 +102,7 @@ public class Avatar extends View implements AvatarContract.View {
     }
 
     private void setUpAvatarViewModel() {
-        mViewModelContract.setView(this);
+        mAvatarViewModel.setView(this);
     }
 
     public Avatar setStyle(AvatarStyle avatarStyle) {
@@ -115,8 +115,8 @@ public class Avatar extends View implements AvatarContract.View {
 
     @Override
     public Avatar setParticipants(Identity... participants) {
-        mViewModelContract.setParticipants(participants);
-        mViewModelContract.update();
+        mAvatarViewModel.setParticipants(participants);
+        mAvatarViewModel.update();
         return this;
     }
 
@@ -150,19 +150,19 @@ public class Avatar extends View implements AvatarContract.View {
      */
     @Override
     public Avatar setParticipants(Set<Identity> participants) {
-        mViewModelContract.setParticipants(participants);
+        mAvatarViewModel.setParticipants(participants);
         return this;
     }
 
     public Set<Identity> getParticipants() {
-        return mViewModelContract.getParticipants();
+        return mAvatarViewModel.getParticipants();
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         if (!changed) return;
-        mViewModelContract.setClusterSizes();
+        mAvatarViewModel.setClusterSizes();
     }
 
     @Override
@@ -207,7 +207,7 @@ public class Avatar extends View implements AvatarContract.View {
                         targetUrl = null;
                     }
                     //TODO: Turn into builder like partern
-                    mViewModelContract.loadImage(targetUrl, Avatar.TAG,null,null,size,size,
+                    mAvatarViewModel.loadImage(targetUrl, Avatar.TAG,null,null,size,size,
                             (avatarCount > 1),
                             uiImageTarget);
                 }
@@ -226,7 +226,7 @@ public class Avatar extends View implements AvatarContract.View {
     @Override
     protected void onDraw(Canvas canvas) {
         // Clear canvas
-        int avatarCount = mViewModelContract.getInitialSize();
+        int avatarCount = mAvatarViewModel.getInitialSize();
         canvas.drawRect(0f, 0f, canvas.getWidth(), canvas.getHeight(), PAINT_TRANSPARENT);
         if (avatarCount == 0) return;
         boolean hasBorder = (avatarCount != 1);
@@ -236,12 +236,12 @@ public class Avatar extends View implements AvatarContract.View {
         float cx = mCenterX;
         float cy = mCenterY;
         mContentRect.set(cx - contentRadius, cy - contentRadius, cx + contentRadius, cy + contentRadius);
-        for (Map.Entry<Identity, String> entry : mViewModelContract.getEntrySet()) {
+        for (Map.Entry<Identity, String> entry : mAvatarViewModel.getEntrySet()) {
             // Border / background
             if (hasBorder) canvas.drawCircle(cx, cy, mOuterRadius, mPaintBorder);
 
             // Initials or bitmap
-            UiImageTarget uiImageTarget = mViewModelContract.getImageTarget(entry.getKey());
+            UiImageTarget uiImageTarget = mAvatarViewModel.getImageTarget(entry.getKey());
             Bitmap bitmap = (uiImageTarget == null) ? null : uiImageTarget.getBitmap();
             if (bitmap == null) {
                 String initials = entry.getValue();

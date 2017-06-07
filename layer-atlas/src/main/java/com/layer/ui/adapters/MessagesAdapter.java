@@ -26,7 +26,6 @@ import com.layer.sdk.messaging.Message;
 import com.layer.sdk.query.ListViewController;
 import com.layer.sdk.query.Query;
 import com.layer.sdk.query.RecyclerViewController;
-import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.util.Collections;
@@ -63,9 +62,7 @@ import java.util.Set;
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHolder> implements
         BaseAdapter<Message>, RecyclerViewController.Callback {
     private final static int VIEW_TYPE_FOOTER = 0;
-
     protected final LayerClient mLayerClient;
-    protected final Picasso mPicasso;
     private final RecyclerViewController<Message> mQueryController;
     protected final LayoutInflater mLayoutInflater;
     protected final Handler mUiThreadHandler;
@@ -99,9 +96,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     protected boolean mShouldShowAvatarInOneOnOneConversations;
     protected boolean mShouldShowAvatarPresence = true;
 
-    public MessagesAdapter(Context context, LayerClient layerClient, Picasso picasso) {
+    public MessagesAdapter(Context context, LayerClient layerClient) {
         mLayerClient = layerClient;
-        mPicasso = picasso;
         mLayoutInflater = LayoutInflater.from(context);
         mUiThreadHandler = new Handler(Looper.getMainLooper());
         mDateFormat = android.text.format.DateFormat.getDateFormat(context);
@@ -299,7 +295,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
 
         CellType cellType = mCellTypesByViewType.get(viewType);
         int rootResId = cellType.mMe ? CellViewHolder.RESOURCE_ID_ME : CellViewHolder.RESOURCE_ID_THEM;
-        CellViewHolder rootViewHolder = new CellViewHolder(mLayoutInflater.inflate(rootResId, parent, false), mPicasso, mLayerClient, mShouldShowAvatarPresence);
+        CellViewHolder rootViewHolder = new CellViewHolder(mLayoutInflater.inflate(rootResId, parent, false), mLayerClient, mShouldShowAvatarPresence);
         rootViewHolder.mCellHolder = cellType.mCellFactory.createCellHolder(rootViewHolder.mCell, cellType.mMe, mLayoutInflater);
         rootViewHolder.mCellHolderSpecs = new CellFactory.CellHolderSpecs();
         return rootViewHolder;
@@ -721,7 +717,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         protected CellFactory.CellHolder mCellHolder;
         protected CellFactory.CellHolderSpecs mCellHolderSpecs;
 
-        public CellViewHolder(View itemView, Picasso picasso, LayerClient layerClient, boolean shouldShowAvatarPresence) {
+        public CellViewHolder(View itemView, LayerClient layerClient, boolean shouldShowAvatarPresence) {
             super(itemView);
             mUserName = (TextView) itemView.findViewById(R.id.sender);
             mTimeGroup = itemView.findViewById(R.id.time_group);
